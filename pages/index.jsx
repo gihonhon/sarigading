@@ -1,6 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Head from "next/head";
-import Image from "next/image";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { Tab, Tabs, Typography, Box } from "@mui/material";
 import PropTypes from "prop-types";
@@ -86,7 +86,79 @@ export default function Home() {
     setValue(newValue);
   };
 
+  const handleChangeTab = (newValue) => {
+    setValue(newValue);
+  };
+
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/tampil");
+        console.log(response.data);
+        setData(response.data.values);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const CombinedImage = ({ imageData }) => {
+    const [imageSrc, setImageSrc] = useState(null);
+
+    useEffect(() => {
+      const loadImage = () => {
+        const image = new Image();
+        image.src = `data:image/jpeg;base64,${imageData}`;
+        setImageSrc(image);
+      };
+
+      loadImage();
+    }, [imageData]);
+
+    if (!imageSrc) {
+      return null;
+    }
+
+    return (
+        <img src={imageSrc.src} width={200} height={100} alt="Combined Image"/>
+    );
+  };
+
   const router = useRouter();
+
+  const handleWhatsAppClick = () => {
+    const phoneNumber = '6281253358263';
+    const url = `https://wa.me/${phoneNumber}`;
+    window.open(url, '_blank');
+  };
+
+  const launchDate = new Date('2024-07-01');
+
+  const [countdown, setCountdown] = useState('');
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const currentDate = new Date();
+      const timeRemaining = launchDate - currentDate;
+
+      const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+      if (timeRemaining < 0) {
+        setCountdown("We're live!");
+      } else {
+        setCountdown(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -156,7 +228,7 @@ export default function Home() {
             >
               <SwiperSlide>
                 <div className="bg-cover h-full flex items-center bg-[url('/slider1.jpg')] ">
-                  <div className="flex flex-col items-start ml-16 gap-y-4 text-white bg-gray-500/5 p-5 drop-shadow-lg">
+                  <div className="flex flex-col items-start ml-16 gap-y-4 text-white bg-gray-500/60 rounded-lg p-5 drop-shadow-lg">
                     <h1 className="font-bold text-4xl">
                       Makanan China yang Menggugah Selera
                     </h1>
@@ -172,7 +244,7 @@ export default function Home() {
 
               <SwiperSlide>
                 <div className="bg-cover h-full flex items-center bg-[url('/slider2.jpg')]">
-                  <div className="flex flex-col items-start ml-16 gap-y-4 text-white bg-gray-500/5 p-5 drop-shadow-lg">
+                  <div className="flex flex-col items-start ml-16 gap-y-4 text-white w-[70%] bg-gray-500/60 rounded-lg p-5 drop-shadow-lg">
                     <h1 className="font-bold text-4xl">
                       Cicipi Kelezatan Tradisional China
                     </h1>
@@ -189,7 +261,7 @@ export default function Home() {
 
               <SwiperSlide>
                 <div className="bg-cover h-full flex items-center bg-[url('/slider3.jpg')]">
-                  <div className="flex flex-col items-start ml-16 gap-y-4 text-white bg-gray-500/5 p-5 drop-shadow-lg">
+                  <div className="flex flex-col items-start ml-16 gap-y-4 text-white bg-gray-500/60 rounded-lg p-5 drop-shadow-lg">
                     <h1 className="font-bold text-4xl ">
                       Menu Pilihan dengan Sentuhan China
                     </h1>
@@ -204,14 +276,14 @@ export default function Home() {
 
               <SwiperSlide>
                 <div className="bg-cover h-full flex items-center bg-[url('/slider4.jpg')]">
-                  <div className="flex flex-col items-start ml-16 gap-y-4 text-white bg-gray-500/5 p-5 drop-shadow-lg">
+                  <div className="flex flex-col items-start ml-16 gap-y-4 text-white w-[60%] bg-gray-500/60 rounded-lg p-5 drop-shadow-lg">
                     <h1 className="font-bold text-4xl">
                       Warisan Kuliner China untuk Anda
                     </h1>
-                    <h3 className="text-xl w-[80%] text-left">
+                    <h3 className="text-xl text-left">
                       Kami menghadirkan warisan kuliner China yang kaya dan
                       autentik langsung untuk Anda. Nikmati pengalaman makan
-                      yang memikat dengan cita rasa tradisional yang terjaga
+                      cita rasa tradisional yang terjaga
                     </h3>
                   </div>
                 </div>
@@ -227,7 +299,8 @@ export default function Home() {
               Tempat yang sempurna untuk menikmati makanan China autentik dengan
               cita rasa yang khas.
             </h2>
-            <button className="text-xl font-medium inline-flex items-center gap-1 p-[16px_22px] transition ease-in-out delay-150 border rounded-md my-4 drop-shadow-md shadow-md hover:-translate-y-1 hover:scale-110 duration-300 hover:bg-[#F46A06] hover:filter-none hover:text-white ">
+            <button onClick={() => handleChangeTab(1)}
+             className="text-xl font-medium inline-flex items-center gap-1 p-[16px_22px] transition ease-in-out delay-150 border rounded-md my-4 drop-shadow-md shadow-md hover:-translate-y-1 hover:scale-110 duration-300 hover:bg-[#F46A06] hover:filter-none hover:text-white ">
               Learn More <MdOutlineArrowOutward />
             </button>
           </div>
@@ -253,257 +326,34 @@ export default function Home() {
                 modules={[Pagination, Autoplay]}
                 className="mySwiper"
               >
-                <SwiperSlide>
-                  <div className="w-full h-full flex flex-col bg-white rounded-md">
-                    <img
-                      className="rounded-md"
-                      src="/nasiGorengNusantaraRaya..jpeg"
-                      alt=""
-                    />
+                {data.map((menu) => {
+                  return (
+                    <>
+                    <SwiperSlide key={menu.id_menu}>
+                  <div className="w-full h-full flex flex-col bg-white rounded-md mb-12">
+                    <CombinedImage imageData={Buffer.from(menu.gambar.data).toString("base64")}/>
                     <div className="mx-2 my-2 text-left">
                       <h1 className="font-semibold my-2 px-2 text-lg">
-                        Nasi Goreng Nusantara Raya + Telor Dadar
+                        {menu.nama_menu}
                       </h1>
                       <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 49.500,00-
+                        {new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(menu.harga)}
                       </h1>
                     </div>
-                    <button className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
+                    <button onClick={handleWhatsAppClick} className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
                       Order <GiKnifeFork />
                     </button>
                   </div>
                 </SwiperSlide>
+                    </>
+                  )
+                })}
+                
 
-                <SwiperSlide>
-                  <div className="w-full h-full mb-10 flex flex-col bg-white rounded-md">
-                    <img
-                      className="rounded-md"
-                      src="/nasiCapCaySpesial.jpeg"
-                      alt=""
-                    />
-                    <div className="mx-2 my-2 text-left">
-                      <h1 className="font-semibold my-2 px-2 text-lg">
-                        Nasi Cap Cay Spesial
-                      </h1>
-                      <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 52.500,00-
-                      </h1>
-                    </div>
-                    <button className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
-                      Order <GiKnifeFork />
-                    </button>
-                  </div>
-                </SwiperSlide>
 
-                <SwiperSlide>
-                  <div className="w-full h-full flex flex-col bg-white rounded-md">
-                    <img
-                      className="rounded-md"
-                      src="/mie_bihun_gorengTelurAsinSingapore.jpeg"
-                      alt=""
-                    />
-                    <div className="mx-2 my-2 text-left">
-                      <h1 className="font-semibold my-2 px-2 text-lg">
-                        Mie/bihun/goreng Telur Asin Singapore
-                      </h1>
-                      <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 56.500,00-
-                      </h1>
-                    </div>
-                    <a target="_blank" rel="noreferrer noopener" href="https://wa.me/6281253358263" className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
-                      Order <GiKnifeFork />
-                    </a>
-                  </div>
-                </SwiperSlide>
-
-                <SwiperSlide>
-                  <div className="w-full h-full flex flex-col bg-white rounded-md">
-                    <img
-                      className="rounded-md"
-                      src="/ifumie_TamieSpesial.jpeg"
-                      alt=""
-                    />
-                    <div className="mx-2 my-2 text-left">
-                      <h1 className="font-semibold my-2 px-2 text-lg">
-                        Ifumie Tamie Spesial
-                      </h1>
-                      <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 49.500,00-
-                      </h1>
-                    </div>
-                    <button className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
-                      Order <GiKnifeFork />
-                    </button>
-                  </div>
-                </SwiperSlide>
-
-                <SwiperSlide>
-                  <div className="w-full h-full flex flex-col bg-white rounded-md">
-                    <img
-                      className="rounded-md"
-                      src="/nasiGorengNusantaraRaya..jpeg"
-                      alt=""
-                    />
-                    <div className="mx-2 my-2 text-left">
-                      <h1 className="font-semibold my-2 px-2 text-lg">
-                        Nasi Goreng Nusantara Raya + Telor Dadar
-                      </h1>
-                      <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 49.500,00-
-                      </h1>
-                    </div>
-                    <button className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
-                      Order <GiKnifeFork />
-                    </button>
-                  </div>
-                </SwiperSlide>
-
-                <SwiperSlide>
-                  <div className="w-full h-full mb-10 flex flex-col bg-white rounded-md">
-                    <img
-                      className="rounded-md"
-                      src="/nasiCapCaySpesial.jpeg"
-                      alt=""
-                    />
-                    <div className="mx-2 my-2 text-left">
-                      <h1 className="font-semibold my-2 px-2 text-lg">
-                        Nasi Cap Cay Spesial
-                      </h1>
-                      <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 52.500,00-
-                      </h1>
-                    </div>
-                    <button className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
-                      Order <GiKnifeFork />
-                    </button>
-                  </div>
-                </SwiperSlide>
-
-                <SwiperSlide>
-                  <div className="w-full h-full flex flex-col bg-white rounded-md">
-                    <img
-                      className="rounded-md"
-                      src="/mie_bihun_gorengTelurAsinSingapore.jpeg"
-                      alt=""
-                    />
-                    <div className="mx-2 my-2 text-left">
-                      <h1 className="font-semibold my-2 px-2 text-lg">
-                        Mie/bihun/goreng Telur Asin Singapore
-                      </h1>
-                      <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 58.500,00-
-                      </h1>
-                    </div>
-                    <button className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
-                      Order <GiKnifeFork />
-                    </button>
-                  </div>
-                </SwiperSlide>
-
-                <SwiperSlide>
-                  <div className="w-full h-full flex flex-col bg-white rounded-md">
-                    <img
-                      className="rounded-md"
-                      src="/ifumie_TamieSpesial.jpeg"
-                      alt=""
-                    />
-                    <div className="mx-2 my-2 text-left">
-                      <h1 className="font-semibold my-2 px-2 text-lg">
-                        Ifumie Tamie Spesial
-                      </h1>
-                      <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 49.500,00-
-                      </h1>
-                    </div>
-                    <button className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
-                      Order <GiKnifeFork />
-                    </button>
-                  </div>
-                </SwiperSlide>
-
-                <SwiperSlide>
-                  <div className="w-full h-full flex flex-col bg-white rounded-md">
-                    <img
-                      className="rounded-md"
-                      src="/nasiGorengNusantaraRaya..jpeg"
-                      alt=""
-                    />
-                    <div className="mx-2 my-2 text-left">
-                      <h1 className="font-semibold my-2 px-2 text-lg">
-                        Nasi Goreng Nusantara Raya + Telor Dadar
-                      </h1>
-                      <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 49.500,00-
-                      </h1>
-                    </div>
-                    <button className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
-                      Order <GiKnifeFork />
-                    </button>
-                  </div>
-                </SwiperSlide>
-
-                <SwiperSlide>
-                  <div className="w-full h-full mb-10 flex flex-col bg-white rounded-md">
-                    <img
-                      className="rounded-md"
-                      src="/nasiCapCaySpesial.jpeg"
-                      alt=""
-                    />
-                    <div className="mx-2 my-2 text-left">
-                      <h1 className="font-semibold my-2 px-2 text-lg">
-                        Nasi Cap Cay Spesial
-                      </h1>
-                      <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 52.500,00-
-                      </h1>
-                    </div>
-                    <button className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
-                      Order <GiKnifeFork />
-                    </button>
-                  </div>
-                </SwiperSlide>
-
-                <SwiperSlide>
-                  <div className="w-full h-full flex flex-col bg-white rounded-md">
-                    <img
-                      className="rounded-md"
-                      src="/mie_bihun_gorengTelurAsinSingapore.jpeg"
-                      alt=""
-                    />
-                    <div className="mx-2 my-2 text-left">
-                      <h1 className="font-semibold my-2 px-2 text-lg">
-                        Mie/bihun/goreng Telur Asin Singapore
-                      </h1>
-                      <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 58.500,00-
-                      </h1>
-                    </div>
-                    <button className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
-                      Order <GiKnifeFork />
-                    </button>
-                  </div>
-                </SwiperSlide>
-
-                <SwiperSlide>
-                  <div className="w-full h-full flex flex-col bg-white rounded-md">
-                    <img
-                      className="rounded-md"
-                      src="/ifumie_TamieSpesial.jpeg"
-                      alt=""
-                    />
-                    <div className="mx-2 my-2 text-left">
-                      <h1 className="font-semibold my-2 px-2 text-lg">
-                        Ifumie Tamie Spesial
-                      </h1>
-                      <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 49.500,00-
-                      </h1>
-                    </div>
-                    <button className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
-                      Order <GiKnifeFork />
-                    </button>
-                  </div>
-                </SwiperSlide>
               </Swiper>
             </div>
           </div>
@@ -568,10 +418,22 @@ export default function Home() {
           </footer>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          About
+        <div className="flex justify-center items-center h-screen bg-gray-100">
+          <div className="max-w-md w-full bg-white p-8 rounded shadow">
+            <h1 className="text-3xl font-bold mb-4">Coming Soon</h1>
+            <p className="text-lg text-gray-600 mb-6">We are working on something awesome. Stay tuned!</p>
+          <div className="text-2xl text-gray-700">{countdown}</div>
+        </div>
+        </div>
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Menu
+        <div className="flex justify-center items-center h-screen bg-gray-100">
+          <div className="max-w-md w-full bg-white p-8 rounded shadow">
+            <h1 className="text-3xl font-bold mb-4">Coming Soon</h1>
+            <p className="text-lg text-gray-600 mb-6">We are working on something awesome. Stay tuned!</p>
+          <div className="text-2xl text-gray-700">{countdown}</div>
+        </div>
+        </div>
         </TabPanel>
         {/* <div className='m-auto grid grid-cols-2 gap-2'>
             <div className='flex flex-col text-white justify-center items-start m-16'>

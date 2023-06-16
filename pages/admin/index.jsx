@@ -8,6 +8,7 @@ import { Card, CardContent, CardActions, CardMedia } from "@mui/material";
 // import ImageDisplay from "@/components/ImageDisplay";
 // Keren bang
 const AdminDashboard = () => {
+  const router = useRouter();
   // Fetch data from API and store it in a state variable
   const [data, setData] = useState([]);
 
@@ -44,7 +45,7 @@ const AdminDashboard = () => {
 
     return (
       <div className="flex justify-center h-[50%] my-4">
-        <img src={imageSrc.src} width={150} height={100} alt="Combined Image"/>
+        <img src={imageSrc.src} width={200} height={100} alt="Combined Image"/>
       </div>
     );
   };
@@ -80,44 +81,45 @@ const AdminDashboard = () => {
               </button>
             </div> */}
 
-            <button
+            {/* <button
               onClick={() => router.push("/login")}
               className="text-lg flex items-center mx-4 font-semibold leading-6 text-gray-900 hover:text-[#F46A06]"
             >
               <MdLogin className="mx-1" />
               Logout
-            </button>
+            </button> */}
           </nav>
         </header>
         <div className="flex flex-col w-full h-full items-center gap-2 justify-center">
-          <h1 className="font-medium text-lg">Menu Table</h1>
+          <h1 className="font-medium text-2xl">Menu Table</h1>
           <div className="flex w-[50%] justify-end">
-            <button className="flex items-center text-white font-semibold p-[8px_16px] rounded-lg bg-green-600">
+            <button className="flex items-center text-white font-semibold p-[8px_16px] rounded-lg bg-green-600"
+            onClick={() => router.push("/tambah")}
+            >
               <MdAdd/>
               Add
             </button>
           </div>
-          <div className="w-[60%] h-auto grid grid-cols-4 gap-4">
+          <div className="w-[60%] h-auto grid grid-cols-3 gap-4 my-4">
             {data.map((menu) => {
               return (
                 <>
-              <Card key={menu.id_menu} sx={{ minWidth: 200, minHeight: 200}} className="drop-shadow-md">
+              <Card key={menu.id_menu} sx={{ minWidth: 300, minHeight: 600}} className="drop-shadow-md">
                 <CombinedImage
                   imageData={Buffer.from(menu.gambar.data).toString("base64")}/>
-
+              <CardContent>
+                <h1>{menu.nama_menu}</h1>
+              </CardContent>
               <CardActions className="flex justify-center mt-2">
-                <button className="bg-gray-300 font-medium p-[10px_18px] w-[120px] rounded-lg">Update</button>
+                <button className="bg-gray-300 text-lg font-medium p-[10px_18px] w-[220px] rounded-lg">Update</button>
               </CardActions>
               <CardActions className="flex justify-center">
-                <button className="bg-red-600 font-medium p-[10px_18px] w-[120px] rounded-lg">Delete</button>
+                <button className="bg-red-600 text-lg font-medium p-[10px_18px] w-[220px] rounded-lg">Delete</button>
               </CardActions>
             </Card>
                 </>
               )
             })}
-
-
-
           </div>
         </div>
       </div>

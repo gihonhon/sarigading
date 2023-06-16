@@ -26,6 +26,7 @@ const Login = () => {
     const { control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(loginSchema) })
     const handleLogin = (data) => {
         console.log(data)
+        router.push('/admin')
     }
     const router = useRouter()
     return (
