@@ -46,8 +46,8 @@ const AdminDashboard = () => {
   };
   return (
     <div>
-      <h1>Dashboard Admin</h1>
-      <table>
+      <h1 className="w-full h-10 text-center pt-10 font-semibold text-3xl">Dashboard Admin</h1>
+      <table className="">
         <thead>
           <tr>
             <th>ID</th>
