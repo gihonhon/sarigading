@@ -307,12 +307,12 @@ export default function Home() {
                         Mie/bihun/goreng Telur Asin Singapore
                       </h1>
                       <h1 className="font-medium text-[#F46A06] px-2 text-2xl">
-                        Rp 58.500,00-
+                        Rp 56.500,00-
                       </h1>
                     </div>
-                    <button className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
+                    <a target="_blank" rel="noreferrer noopener" href="https://wa.me/6281253358263" className="inline-flex items-center justify-center text-xl gap-1 font-medium mx-5 my-4 py-[12px] border rounded-md drop-shadow-sm shadow-md transition ease-linear delay-150 hover:bg-[#F46A06] hover:-translate-y-1 hover:scale-100 duration-300">
                       Order <GiKnifeFork />
-                    </button>
+                    </a>
                   </div>
                 </SwiperSlide>
 

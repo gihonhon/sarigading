@@ -91,13 +91,6 @@ const Login = () => {
                         <input type='password' placeholder='Password' className='h-[60px] border border-black rounded-[7px] p-6'/> */}
                     <button type='submit' className='text-white w-[50%] h-[60px] self-center my-4 font-semibold rounded-[7px] bg-[#F46A06] hover:bg-[#c4590d]'>Log in</button>
                     </form>
-                    <div className='flex self-center my-8 items-start'>
-                        <span className='self-center font-medium text-[#7a7c85]'>
-                            Not a trippy member?
-                        </span>
-                        <button onClick={() => router.push('/register')} className='text-[#fa9a55] self-center font-bold cursor-pointer'
-                        >Register now</button>
-                    </div>
                 </div>
             </div>
             <div className='w-[50%] h-full flex self-center items-start justify-center border-l'>
