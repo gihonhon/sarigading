@@ -43,7 +43,7 @@ const FormSkeleton = () => {
       <h1 className="text-center text-3xl py-5">Form Tambah Menu</h1>
       <form
         onSubmit={handleSubmit}
-        className="text-lg flex flex-col gap-5 justify-center"
+        className="text-lg flex flex-col gap-7 justify-center px-10"
       >
         <div>
           <label>Nama Menu : </label>
@@ -70,6 +70,7 @@ const FormSkeleton = () => {
           />
         </div>
         <div>
+          <label>Gambar : </label>
           <input type="file" onChange={(e) => setGambar(e.target.files[0])} />
         </div>
         <button type="submit" className="bg-orange-400 w-24 h-8 rounded">
