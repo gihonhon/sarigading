@@ -26,6 +26,16 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
+  // const deleteItem = async (id) => {
+  //   try {
+  //     await axios.delete(`http://localhost:8000/hapus`, {
+  //       "id_menu": id
+  //     }).then((res) => res.data.value)
+  //   } catch (error) {
+  //     return error
+  //   }
+  // }
+
   const CombinedImage = ({ imageData }) => {
     const [imageSrc, setImageSrc] = useState(null);
 
@@ -111,10 +121,10 @@ const AdminDashboard = () => {
                 <h1>{menu.nama_menu}</h1>
               </CardContent>
               <CardActions className="flex justify-center mt-2">
-                <button className="bg-gray-300 text-lg font-medium p-[10px_18px] w-[220px] rounded-lg">Update</button>
+                <button onClick={() => router.push(`/admin/${menu.id_menu}`)} className="bg-gray-300 text-lg font-medium p-[10px_18px] w-[220px] rounded-lg">Update</button>
               </CardActions>
               <CardActions className="flex justify-center">
-                <button className="bg-red-600 text-lg font-medium p-[10px_18px] w-[220px] rounded-lg">Delete</button>
+                <button onClick={() => deleteItem(menu.id_menu)} className="bg-red-600 text-lg font-medium p-[10px_18px] w-[220px] rounded-lg">Delete</button>
               </CardActions>
             </Card>
                 </>
